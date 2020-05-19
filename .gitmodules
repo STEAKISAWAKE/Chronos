@@ -1,0 +1,3 @@
+[submodule "ThirdParty/mathc/mathc"]
+	path = ThirdParty/mathc/mathc
+	url = https://github.com/felselva/mathc

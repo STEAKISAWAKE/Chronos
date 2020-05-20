@@ -1,3 +1,6 @@
 [submodule "ThirdParty/mathc/mathc"]
 	path = ThirdParty/mathc/mathc
 	url = https://github.com/felselva/mathc
+[submodule ".\\ThirdParty\\glfw\\glfw"]
+	path = .\\ThirdParty\\glfw\\glfw
+	url = https://github.com/glfw/glfw

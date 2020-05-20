@@ -1,4 +1,4 @@
-add_executable(UpsilonLogTest main.c)
+add_executable(ChronosLogTest main.c)
 
-target_include_directories(UpsilonLogTest PUBLIC "${UPSILON_INCLUDE}/Utilities/")
-target_link_libraries(UpsilonLogTest UpsilonUtilities)
+target_include_directories(ChronosLogTest PUBLIC "${CHRONOS_INCLUDE}/Utilities/")
+target_link_libraries(ChronosLogTest ChronosUtilities)

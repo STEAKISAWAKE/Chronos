@@ -1,5 +1,5 @@
-#ifndef __UPSILON_GAME_TYPES_H__
-#define __UPSILON_GAME_TYPES_H__
+#ifndef __CHRONOS_GAME_TYPES_H__
+#define __CHRONOS_GAME_TYPES_H__
 
 #include <stdint.h>
 #include <bitset>
@@ -18,4 +18,4 @@ using Signature = std::bitset<MAX_COMPONENTS>;
 
 
 
-#endif /* __UPSILON_GAME_TYPES_H__ */
+#endif /* __CHRONOS_GAME_TYPES_H__ */

@@ -1,5 +1,5 @@
-#ifndef __UPSILON_GAME_WORLD_H__
-#define __UPSILON_GAME_WORLD_H__
+#ifndef __CHRONOS_GAME_WORLD_H__
+#define __CHRONOS_GAME_WORLD_H__
 
 #include <memory>
 
@@ -84,4 +84,4 @@ private:
 
 };
 
-#endif // __UPSILON_GAME_WORLD_H__
+#endif // __CHRONOS_GAME_WORLD_H__

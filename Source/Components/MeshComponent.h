@@ -1,5 +1,5 @@
-#ifndef __UPSILON_COMPONENTS_MESHCOMPONENT_H__
-#define __UPSILON_COMPONENTS_MESHCOMPONENT_H___
+#ifndef __CHRONOS_COMPONENTS_MESHCOMPONENT_H__
+#define __CHRONOS_COMPONENTS_MESHCOMPONENT_H___
 
 #include "Component.h"
 
@@ -12,4 +12,4 @@ struct MeshComponent
     std::vector<uint16_t> Indices;
 };
 
-#endif // __UPSILON_COMPONENTS_MESHCOMPONENT_H__
+#endif // __CHRONOS_COMPONENTS_MESHCOMPONENT_H__

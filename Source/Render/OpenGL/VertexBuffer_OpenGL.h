@@ -1,7 +1,7 @@
-#ifndef __UPSILON_RENDER_VERTEXBUFFER_OPENGL_H__
-#define __UPSILON_RENDER_VERTEXBUFFER_OPENGL_H__
+#ifndef __CHRONOS_RENDER_VERTEXBUFFER_OPENGL_H__
+#define __CHRONOS_RENDER_VERTEXBUFFER_OPENGL_H__
 
-#include "VertexBuffer.h"
+#include "../VertexBuffer.h"
 
 class VertexBuffer_OpenGL
     : public VertexBuffer
@@ -16,4 +16,4 @@ public:
 
 };
 
-#endif // __UPSILON_RENDER_VERTEXBUFFER_OPENGL_H__
+#endif // __CHRONOS_RENDER_VERTEXBUFFER_OPENGL_H__

@@ -1,5 +1,5 @@
-#ifndef __UPSILON_GAME_ENTITYMANAGER_H__
-#define __UPSILON_GAME_ENTITYMANAGER_H__
+#ifndef __CHRONOS_GAME_ENTITYMANAGER_H__
+#define __CHRONOS_GAME_ENTITYMANAGER_H__
 
 #include <assert.h>
 #include <queue>
@@ -67,4 +67,4 @@ private:
     uint32_t mLivingEntityCount{};
 };
 
-#endif // __UPSILON_GAME_ENTITYMANAGER_H__
+#endif // __CHRONOS_GAME_ENTITYMANAGER_H__

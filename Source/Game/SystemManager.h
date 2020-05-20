@@ -1,5 +1,5 @@
-#ifndef __UPSILON_GAME_SYSTEMMANAGER_H__
-#define __UPSILON_GAME_SYSTEMMANAGER_H__
+#ifndef __CHRONOS_GAME_SYSTEMMANAGER_H__
+#define __CHRONOS_GAME_SYSTEMMANAGER_H__
 
 #include <memory>
 #include <unordered_map>
@@ -73,4 +73,4 @@ private:
 
 };
 
-#endif // __UPSILON_GAME_SYSTEMMANAGER_H__
+#endif // __CHRONOS_GAME_SYSTEMMANAGER_H__

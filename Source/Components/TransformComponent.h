@@ -1,5 +1,5 @@
-#ifndef __UPSILON_GAME_TRANSFORMCOMPONENT_H__
-#define __UPSILON_GAME_TRANSFORMCOMPONENT_H__
+#ifndef __CHRONOS_GAME_TRANSFORMCOMPONENT_H__
+#define __CHRONOS_GAME_TRANSFORMCOMPONENT_H__
 
 #include "Component.h"
 
@@ -35,4 +35,4 @@ struct TransformComponent
     }
 };
 
-#endif // __UPSILON_GAME_TRANSFORMCOMPONENT_H__
+#endif // __CHRONOS_GAME_TRANSFORMCOMPONENT_H__

@@ -1,5 +1,5 @@
-#ifndef __UPSILON_UTILITIES_LOG_H__
-#define __UPSILON_UTILITIES_LOG_H__
+#ifndef __CHRONOS_UTILITIES_LOG_H__
+#define __CHRONOS_UTILITIES_LOG_H__
 
 #include <stdbool.h>
 
@@ -8,4 +8,4 @@ void LogError(const char* logContext, const char* errorMessage); /* Log an error
 
 void assert_msg(bool expr, const char* msg);
 
-#endif /* __UPSILON_UTILITIES_LOG_H__ */
+#endif /* __CHRONOS_UTILITIES_LOG_H__ */

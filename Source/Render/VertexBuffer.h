@@ -1,10 +1,11 @@
-#ifndef __UPSILON_RENDER_VERTEXBUFFER_H__
-#define __UPSILON_RENDER_VERTEXBUFFER_H__
+#ifndef __CHRONOS_RENDER_VERTEXBUFFER_H__
+#define __CHRONOS_RENDER_VERTEXBUFFER_H__
 
 class VertexBuffer
 {
 
 public:
+    VertexBuffer();
     VertexBuffer(const void* data, unsigned int size);
     ~VertexBuffer();
 
@@ -13,4 +14,4 @@ public:
 
 };
 
-#endif // __UPSILON_RENDER_VERTEXBUFFER_H__
+#endif // __CHRONOS_RENDER_VERTEXBUFFER_H__

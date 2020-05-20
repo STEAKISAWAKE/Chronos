@@ -1,5 +1,5 @@
-#ifndef __UPSILON_GAME_SYSTEM_H__
-#define __UPSILON_GAME_SYSTEM_H__
+#ifndef __CHRONOS_GAME_SYSTEM_H__
+#define __CHRONOS_GAME_SYSTEM_H__
 
 #include <set>
 
@@ -21,4 +21,4 @@ public:
     virtual void End() {}
 };
 
-#endif // __UPSILON_GAME_SYSTEM_H__
+#endif // __CHRONOS_GAME_SYSTEM_H__

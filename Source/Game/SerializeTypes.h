@@ -1,0 +1,9 @@
+#ifndef __CHRONOS_GAME_SERIALIZETYPES_H__
+#define __CHRONOS_GAME_SERIALIZETYPES_H__
+
+namespace glm
+{
+    
+}
+
+#endif // __CHRONOS_GAME_SERIALIZETYPES_H__

@@ -1,9 +1,0 @@
-#ifndef __UPSILON_GAME_SERIALIZETYPES_H__
-#define __UPSILON_GAME_SERIALIZETYPES_H__
-
-namespace glm
-{
-    
-}
-
-#endif // __UPSILON_GAME_SERIALIZETYPES_H__

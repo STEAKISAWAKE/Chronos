@@ -1,5 +1,5 @@
-#ifndef __UPSILON_GAME_COMPONENTARRAY_H__
-#define __UPSILON_GAME_COMPONENTARRAY_H__
+#ifndef __CHRONOS_GAME_COMPONENTARRAY_H__
+#define __CHRONOS_GAME_COMPONENTARRAY_H__
 
 #include <assert.h>
 #include <array>
@@ -71,4 +71,4 @@ private:
     size_t mSize;
 };
 
-#endif // __UPSILON_GAME_COMPONENTARRAY_H__
+#endif // __CHRONOS_GAME_COMPONENTARRAY_H__

@@ -1,12 +1,12 @@
 
 # Create Library
-add_library(UpsilonGame STATIC
+add_library(ChronosGame STATIC
     ComponentArray.cpp
 )
 
 # Include Library
-target_include_directories(UpsilonGame PUBLIC "${UPSILON_INCLUDE}/Game")
-target_include_directories(UpsilonGame PUBLIC "${UPSILON_INCLUDE}/Utilities")
+target_include_directories(ChronosGame PUBLIC "${CHRONOS_INCLUDE}/Game")
+target_include_directories(ChronosGame PUBLIC "${CHRONOS_INCLUDE}/Utilities")
 
 # Include Others
-target_link_libraries(UpsilonGame UpsilonUtilities)
+target_link_libraries(ChronosGame ChronosUtilities)

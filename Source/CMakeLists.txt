@@ -1,6 +1,4 @@
-set(UPSILON_INCLUDE "${PROJECT_SOURCE_DIR}/Include")
-
-message(${UPSILON_INCLUDE})
+set(CHRONOS_SOURCE "${PROJECT_SOURCE_DIR}/Source")
 
 add_subdirectory(Game)
 add_subdirectory(Math)

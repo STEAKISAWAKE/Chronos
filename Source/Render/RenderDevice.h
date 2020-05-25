@@ -5,6 +5,7 @@ struct GLFWwindow;
 
 class VertexBuffer;
 class IndexBuffer;
+class Descriptors;
 
 class RenderDevice
 {
@@ -21,13 +22,18 @@ public:
     virtual void Terminate() {}
 
     virtual void CreateWindow() {}
+    virtual void CloseWindow() {}
 
-    virtual VertexBuffer* CreateVertexBuffer() {}
-    virtual IndexBuffer* CreateIndexBuffer() {}
+    virtual VertexBuffer*   CreateVertexBuffer() { return nullptr; }
+    virtual IndexBuffer*    CreateIndexBuffer() { return nullptr; }
+    virtual Descriptors*    CreateDescriptors() { return nullptr; }
 
     virtual void BeginDraw() {}
-    virtual void DrawMesh() {}
     virtual void EndDraw() {}
+
+    virtual void Present() {}
+
+    virtual void Clear() {} 
 
 };
 

@@ -18,7 +18,6 @@ public:
     void CreateWindow() override;
 
     void BeginDraw() override;
-    void DrawMesh() override;
     void EndDraw() override;
 
 };

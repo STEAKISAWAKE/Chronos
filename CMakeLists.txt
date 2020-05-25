@@ -9,6 +9,8 @@ set(CHRONOS_RENDER_USE_VULKAN ON CACHE BOOL "On to use vulkan when rendering")
 # Build Third Party Libraries
 add_subdirectory(ThirdParty)
 
+set(CHRONOS_SOURCE "${PROJECT_SOURCE_DIR}/Source")
+
 # Build Chronos
 add_subdirectory(Source)
 

@@ -1,4 +1,4 @@
-#include "RenderDevice_OpenGL.h"
+#include "OpenGL_RenderDevice.h"
 
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
@@ -47,4 +47,14 @@ void RenderDevice_OpenGL::CreateWindow()
     {
         assert_msg(false, "Render Device - OpenGL: Could not initalize GLAD!");
     }
+}
+
+void RenderDevice_OpenGL::BeginDraw()
+{
+    
+}
+
+void RenderDevice_OpenGL::EndDraw()
+{
+
 }

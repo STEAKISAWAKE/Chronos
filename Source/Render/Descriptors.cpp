@@ -5,7 +5,7 @@ Descriptors::Descriptors()
 
 }
 
-Descriptors::Descriptors(std::unordered_map<std::string, Descriptor> descriptorSets)
+Descriptors::Descriptors(std::unordered_map<std::string, Descriptor> descriptorSets, Pipeline* shader)
 {
 
 }

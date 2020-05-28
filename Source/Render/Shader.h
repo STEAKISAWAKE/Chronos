@@ -7,10 +7,9 @@ class Shader
 {
 
 public:
-    Shader(std::vector<char> code);
-    ~Shader();
-
-public:
+    Shader() {}
+    Shader(std::vector<char> code) {}
+    ~Shader() {}
 
 };
 

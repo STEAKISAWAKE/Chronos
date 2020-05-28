@@ -1,0 +1,8 @@
+{
+    "Uniforms" :
+    {
+        "Model" : "Mat4",
+        "View"  : "Mat4",
+        "Projection" : "Mat4"
+    }
+}

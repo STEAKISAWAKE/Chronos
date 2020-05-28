@@ -2,9 +2,17 @@
 
 #include <glad/glad.h>
 
-OpenGL_Descriptors::OpenGL_Descriptors(std::unordered_map<std::string, Descriptor> descriptorSets)
+#include "OpenGL_Shader.h"
+
+OpenGL_Descriptors::OpenGL_Descriptors(std::unordered_map<std::string, Descriptor> descriptorSets, OpenGL_Pipeline* pipeline)
 {
-    GLint loc = glGetUniformLocation()
+
+    for(auto descriptor : descriptorSets)
+    {
+        //GLint loc = glGetUniformLocation(shader->programID, descriptor.first.c_str());
+    }
+
+
 }
 
 OpenGL_Descriptors::~OpenGL_Descriptors()

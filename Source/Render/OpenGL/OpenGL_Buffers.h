@@ -1,7 +1,7 @@
 #ifndef __CHRONOS_RENDER_BUFFERS_OPENGL_H__
 #define __CHRONOS_RENDER_BUFFERS_OPENGL_H__
 
-#include "..\Buffers.h"
+#include "Buffers.h"
 
 class OpenGL_IndexBuffer
     : public IndexBuffer

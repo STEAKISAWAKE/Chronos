@@ -3,6 +3,7 @@
 
 #include "Pipeline.h"
 
+class OpenGL_RenderDevice;
 class OpenGL_Shader;
 
 class OpenGL_Pipeline
@@ -10,7 +11,7 @@ class OpenGL_Pipeline
 {
 
 public:
-    OpenGL_Pipeline(OpenGL_Shader* vertexShader, OpenGL_Shader* fragmentShader);
+    OpenGL_Pipeline(OpenGL_RenderDevice* renderDevice, OpenGL_Shader* vertexShader, OpenGL_Shader* fragmentShader);
     ~OpenGL_Pipeline();
 
 };

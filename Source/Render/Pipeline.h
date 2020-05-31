@@ -3,6 +3,7 @@
 
 #include <vector>
 
+class RenderDevice;
 class Shader;
 
 class Pipeline
@@ -10,7 +11,7 @@ class Pipeline
 
 public:
     Pipeline();
-    Pipeline(Shader* vertexShader, Shader* fragmentShader);
+    Pipeline(RenderDevice* renderDevice, Shader* vertexShader, Shader* fragmentShader);
     ~Pipeline();
 
 public:

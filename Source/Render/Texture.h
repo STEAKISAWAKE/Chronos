@@ -1,11 +1,13 @@
 #ifndef __CHRONOS_RENDER_TEXTURE_H__
 #define __CHRONOS_RENDER_TEXTURE_H__
 
+class RenderDevice;
+
 class Texture
 {
 
 public:
-    Texture();
+    Texture(RenderDevice* renderDevice);
     ~Texture();
 
 public:

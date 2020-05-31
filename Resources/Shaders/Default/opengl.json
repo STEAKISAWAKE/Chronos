@@ -4,5 +4,11 @@
         "Model" : "Mat4",
         "View"  : "Mat4",
         "Projection" : "Mat4"
-    }
+    },
+	"Shaders" :
+	{
+		"shader.opengl.vert" : "vertex"
+		"shader.opengl.frag" : "fragment",
+
+	}
 }

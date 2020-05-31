@@ -27,7 +27,11 @@ public:
     virtual void SetMatrixParameter(std::string name, glm::mat4 value) {}
     virtual void SetSamplerParameter(std::string name, Texture* value) {}
 
-protected:
+public:
+    virtual void LoadMaterial(std::string path);
+
+public:
+    Descriptor* descriptor;
 
 
 

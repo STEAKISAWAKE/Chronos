@@ -1,0 +1,13 @@
+{
+    "Uniforms" :
+    {
+        "Model" : "Mat4",
+        "View"  : "Mat4",
+        "Projection" : "Mat4"
+    },
+	"Shaders" :
+	{
+		"shader.vulkan.vert.spv" : "vertex"
+		"shader.vulkan.frag.spv" : "fragment",
+	}
+}

@@ -5,7 +5,7 @@ Descriptors::Descriptors()
 
 }
 
-Descriptors::Descriptors(std::unordered_map<std::string, Descriptor> descriptorSets, Pipeline* shader)
+Descriptors::Descriptors(RenderDevice* renderDevice, std::unordered_map<std::string, Descriptor> descriptorSets, Pipeline* shader)
 {
 
 }

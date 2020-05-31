@@ -11,6 +11,7 @@ add_library(ChronosRender STATIC
     OpenGL/OpenGL_Shader.cpp
     OpenGL/OpenGL_Descriptors.cpp
     OpenGL/OpenGL_Pipeline.cpp
+    OpenGL/OpenGL_Material.cpp
 )
 
 target_include_directories(ChronosRender PUBLIC "${CHRONOS_SOURCE}/Render")

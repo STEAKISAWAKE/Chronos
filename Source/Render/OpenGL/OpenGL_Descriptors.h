@@ -5,6 +5,7 @@
 
 #include <vector>
 
+class OpenGL_RenderDevice;
 class OpenGL_Pipeline;
 
 class OpenGL_Descriptors
@@ -12,7 +13,7 @@ class OpenGL_Descriptors
 {
 
 public:
-    OpenGL_Descriptors(std::unordered_map<std::string, Descriptor> descriptorSets, OpenGL_Pipeline* shader);
+    OpenGL_Descriptors(OpenGL_RenderDevice* renderDevice, std::unordered_map<std::string, Descriptor> descriptorSets, OpenGL_Pipeline* shader);
     ~OpenGL_Descriptors();
 
 public:

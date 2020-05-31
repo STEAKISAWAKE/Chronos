@@ -4,6 +4,7 @@
 #include <string>
 #include <unordered_map>
 
+class RenderDevice;
 class Pipeline;
 
 struct DescriptorType
@@ -32,7 +33,7 @@ class Descriptors
 
 public:
     Descriptors();
-    Descriptors(std::unordered_map<std::string, Descriptor> descriptorSets, Pipeline* pipeline);
+    Descriptors(RenderDevice* renderDevice, std::unordered_map<std::string, Descriptor> descriptorSets, Pipeline* pipeline);
     ~Descriptors();
 
 public:

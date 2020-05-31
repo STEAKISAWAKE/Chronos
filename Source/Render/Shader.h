@@ -3,12 +3,14 @@
 
 #include <vector>
 
+class RenderDevice;
+
 class Shader
 {
 
 public:
     Shader() {}
-    Shader(std::vector<char> code) {}
+    Shader(RenderDevice* renderDevice, std::vector<char> code) {}
     ~Shader() {}
 
 };

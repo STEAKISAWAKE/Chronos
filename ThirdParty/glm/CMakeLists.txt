@@ -1,3 +1,3 @@
-set(BUILD_STATIC_LIBS CACHE ON FORCE)
+set(BUILD_STATIC_LIBS ON CACHE BOOL "" FORCE)
 
 add_subdirectory(glm)

@@ -1,25 +1,27 @@
-#ifndef __CHRONOS_RENDER_RENDERDEVICE_OPENGL_H__
-#define __CHRONOS_RENDER_RENDERDEVICE_OPENGL_H__
+#ifndef __CHRONOS_RENDER_OPENGL_RENDERDEVICE_H__
+#define __CHRONOS_RENDER_OPENGL_RENDERDEVICE_H__
 
-#include "../RenderDevice.h"
+#include "RenderDevice.h"
 
-class RenderDevice_OpenGL
+class OpenGL_Shader;
+class OpenGL_Pipeline;
+class OpenGL_IndexBuffer;
+class OpenGL_VertexBuffer;
+
+class OpenGL_RenderDevice
     : public RenderDevice
 {
 
 public:
-    RenderDevice_OpenGL();
-    ~RenderDevice_OpenGL();
+    OpenGL_RenderDevice();
+    ~OpenGL_RenderDevice();
 
 public:
-    void Initalize() override;
-    void Terminate() override;
-
-    void CreateWindow() override;
-
-    void BeginDraw() override;
-    void EndDraw() override;
+    Shader* CreateShader() override;
+    Pipeline* CreatePipeline(Shader* vertexShader, Shader* fragmentShader) override;
+    IndexBuffer* CreateIndexBuffer() override;
+    VertexBuffer* CreateVertexBuffer() override;
 
 };
 
-#endif // __CHRONOS_RENDER_RENDERDEVICE_OPENGL_H__
+#endif // __CHRONOS_RENDER_OPENGL_RENDERDEVICE_H__

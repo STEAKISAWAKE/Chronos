@@ -1,11 +1,20 @@
 #ifndef __CHRONOS_RENDER_RENDERDEVICE_H__
 #define __CHRONOS_RENDER_RENDERDEVICE_H__
 
-struct GLFWwindow;
-
-class VertexBuffer;
+class Shader;
+class Pipeline;
 class IndexBuffer;
-class Descriptors;
+class VertexBuffer;
+
+struct RenderDeviceType
+{
+    enum Enum
+    {
+        NoRender,
+        OpenGL,
+        Vulkan
+    };
+};
 
 class RenderDevice
 {
@@ -15,25 +24,13 @@ public:
     ~RenderDevice();
 
 public:
-    GLFWwindow* window;
+    RenderDeviceType::Enum renderType;
 
 public:
-    virtual void Initalize() {}
-    virtual void Terminate() {}
-
-    virtual void CreateWindow() {}
-    virtual void CloseWindow() {}
-
-    virtual VertexBuffer*   CreateVertexBuffer() { return nullptr; }
-    virtual IndexBuffer*    CreateIndexBuffer() { return nullptr; }
-    virtual Descriptors*    CreateDescriptors() { return nullptr; }
-
-    virtual void BeginDraw() {}
-    virtual void EndDraw() {}
-
-    virtual void Present() {}
-
-    virtual void Clear() {} 
+    virtual Shader* CreateShader() {}
+    virtual Pipeline* CreatePipeline(Shader* vertexShader, Shader* fragmentShader) {}
+    virtual IndexBuffer* CreateIndexBuffer() {}
+    virtual VertexBuffer* CreateVertexBuffer() {}
 
 };
 

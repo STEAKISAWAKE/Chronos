@@ -1,18 +1,18 @@
-#ifndef __CHRONOS_RENDER_OPENGL_PIPELINE_H__
-#define __CHRONOS_RENDER_OPENGL_PIPELINE_H__
+#ifndef __CHRONOS_RENDER_VULKAN_PIPELINE_H__
+#define __CHRONOS_RENDER_VULKAN_PIPELINE_H__
 
 #include "Pipeline.h"
 
-class OpenGL_RenderDevice;
-class OpenGL_Shader;
+class Vulkan_RenderDevice;
+class Vulkan_Shader;
 
-class OpenGL_Pipeline
+class Vulkan_Pipeline
     : public Pipeline
 {
 
 public:
-    OpenGL_Pipeline(OpenGL_RenderDevice* renderDevice, OpenGL_Shader* vertexShader, OpenGL_Shader* fragmentShader);
-    ~OpenGL_Pipeline();
+    Vulkan_Pipeline(Vulkan_RenderDevice* renderDevice, Vulkan_Shader* vertexShader, Vulkan_Shader* fragmentShader);
+    ~Vulkan_Pipeline();
 
 public:
     void SetIntParameter(const std::string name, const int value) override;
@@ -26,4 +26,4 @@ public:
 
 };
 
-#endif // __CHRONOS_RENDER_OPENGL_PIPELINE_H__
+#endif // __CHRONOS_RENDER_VULKAN_PIPELINE_H__

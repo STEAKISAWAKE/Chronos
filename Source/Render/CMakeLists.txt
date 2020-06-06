@@ -1,7 +1,8 @@
 add_library(ChronosRender STATIC
     RenderDevice.cpp
     Shader.cpp
-
+    Pipeline.cpp
+    Buffers.cpp
 
     OpenGL/OpenGL_Shader.cpp
     OpenGL/OpenGL_Pipeline.cpp
@@ -27,7 +28,7 @@ target_include_directories(ChronosRender PUBLIC OPENGL_INCLUDE_DIR)
 target_link_libraries(ChronosRender OpenGL::GL)
 
 find_package(Vulkan REQUIRED)
-target_include_directories(ChronosRender PUBLIC Vulkan_INCLUDE_DIRS)
-target_link_libraries(ChronosRender Vulkan_LIBRARY)
+target_include_directories(ChronosRender PUBLIC "${Vulkan_INCLUDE_DIRS}")
+target_link_libraries(ChronosRender "${Vulkan_LIBRARY}")
 
 target_link_libraries(ChronosRender glad)

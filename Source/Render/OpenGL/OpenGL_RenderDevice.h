@@ -17,10 +17,11 @@ public:
     ~OpenGL_RenderDevice();
 
 public:
+    void CreateWindow(std::string windowName, bool fullscreen) override;
     Shader* CreateShader() override;
     Pipeline* CreatePipeline(Shader* vertexShader, Shader* fragmentShader) override;
-    IndexBuffer* CreateIndexBuffer() override;
     VertexBuffer* CreateVertexBuffer() override;
+    IndexBuffer* CreateIndexBuffer() override;
 
 };
 

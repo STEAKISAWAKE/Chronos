@@ -6,6 +6,7 @@
 class Vulkan_RenderDevice;
 
 class Vulkan_Shader
+    : public Shader
 {
 
 public:

@@ -6,6 +6,9 @@
 
 class RenderDevice;
 
+/**
+ * Shader type to tell the pipeline.
+ */ 
 struct ShaderType
 {
     enum Enum
@@ -22,7 +25,10 @@ class Shader
 {
 
 public:
+    /** Constructor */
     Shader(RenderDevice* renderDevice, std::vector<char> code);
+
+    /** Destructor */
     ~Shader();
 
 private:

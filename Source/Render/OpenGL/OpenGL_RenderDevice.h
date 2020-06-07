@@ -18,7 +18,7 @@ public:
 
 public:
     void CreateWindow(std::string windowName, bool fullscreen) override;
-    Shader* CreateShader() override;
+    Shader* CreateShader(std::vector<char> code) override;
     Pipeline* CreatePipeline(Shader* vertexShader, Shader* fragmentShader) override;
     VertexBuffer* CreateVertexBuffer() override;
     IndexBuffer* CreateIndexBuffer() override;

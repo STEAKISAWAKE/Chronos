@@ -3,6 +3,8 @@
 
 #include "Shader.h"
 
+#include <vulkan/vulkan.h>
+
 class Vulkan_RenderDevice;
 
 class Vulkan_Shader
@@ -10,8 +12,13 @@ class Vulkan_Shader
 {
 
 public:
-    Vulkan_Shader(Vulkan_RenderDevice* renderDevice, std::vector<char> code);
+    Vulkan_Shader(RenderDevice* renderDevice, std::vector<char> code);
     ~Vulkan_Shader();
+
+private:
+    Vulkan_RenderDevice* vulkanRenderDevice;
+
+    VkShaderModule shaderModule;
 
 };
 

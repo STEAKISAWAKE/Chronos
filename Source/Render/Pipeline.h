@@ -24,11 +24,14 @@ class Pipeline
 {
 
 public:
+    /** Default Constructor (NOT USED) */
+    Pipeline() {}
+
     /** Constructor (INTERNAL USE ONLY) */
-    Pipeline(RenderDevice* renderDevice, Shader* vertexShader, Shader* fragmentShader);
+    Pipeline(RenderDevice* renderDevice, Shader* vertexShader, Shader* fragmentShader) {}
 
     /** Desctructor */
-    ~Pipeline();
+    ~Pipeline() {}
 
 public:
     /** Set pipeline int parameter. */

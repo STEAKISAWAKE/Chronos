@@ -3,7 +3,7 @@
 
 #include "RenderDevice.h"
 
-#include <Vulkan/vulkan.h>
+#include <vulkan/vulkan.h>
 
 #include <vector>
 
@@ -22,13 +22,14 @@ public:
 
 public:
     void CreateWindow(std::string windowName, bool fullscreen) override;
-    Shader* CreateShader() override;
+    Shader* CreateShader(std::vector<char> code) override;
     Pipeline* CreatePipeline(Shader* vertexShader, Shader* fragmentShader) override;
     VertexBuffer* CreateVertexBuffer() override;
     IndexBuffer* CreateIndexBuffer() override;
 
 public:
     VkInstance instance;
+    VkDebugUtilsMessengerEXT debugMessenger;
 
 };
 
@@ -48,5 +49,12 @@ const std::vector<const char*> validationLayers =
 #else
     const bool enableValidationLayers = true;
 #endif
+
+VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
+    VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+    VkDebugUtilsMessageTypeFlagsEXT messageType,
+    const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
+    void* pUserData
+);
 
 #endif // __CHRONOS_RENDER_VULKAN_RENDERDEVICE_H__

@@ -25,11 +25,14 @@ class Shader
 {
 
 public:
+    /** Default Constructor */
+    Shader() {};
+
     /** Constructor */
-    Shader(RenderDevice* renderDevice, std::vector<char> code);
+    Shader(RenderDevice* renderDevice, std::vector<char> code) {}
 
     /** Destructor */
-    ~Shader();
+    ~Shader() {}
 
 private:
     RenderDevice* renderDevice;

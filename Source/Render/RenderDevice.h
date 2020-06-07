@@ -2,11 +2,14 @@
 #define __CHRONOS_RENDER_RENDERDEVICE_H__
 
 #include <string>
+#include <vector>
 
 class Shader;
 class Pipeline;
 class IndexBuffer;
 class VertexBuffer;
+
+class Vertex;
 
 /**
  * Render device type to determine what API to use.
@@ -29,10 +32,10 @@ class RenderDevice
 
 public:
     /** Constructor */ 
-    RenderDevice();
+    RenderDevice() {}
 
     /** Destructor */
-    ~RenderDevice();
+    ~RenderDevice() {}
 
 public:
     /** Current Render API type */
@@ -43,16 +46,16 @@ public:
     virtual void CreateWindow(std::string windowName, bool fullscreen) {}
 
     /** Create a shader module */
-    virtual Shader* CreateShader() {}
+    virtual Shader* CreateShader(std::vector<char> code) { return nullptr; }
 
     /** Create a pipeline */
-    virtual Pipeline* CreatePipeline(Shader* vertexShader, Shader* fragmentShader) {}
+    virtual Pipeline* CreatePipeline(Shader* vertexShader, Shader* fragmentShader) { return nullptr; }
 
     /** Create a vertex buffer */
-    virtual VertexBuffer* CreateVertexBuffer() {}
+    virtual VertexBuffer* CreateVertexBuffer() { return nullptr; }
 
     /** Create a index buffer */
-    virtual IndexBuffer* CreateIndexBuffer() {}
+    virtual IndexBuffer* CreateIndexBuffer() { return nullptr; }
 
 };
 

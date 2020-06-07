@@ -33,7 +33,7 @@ void CreateWindow(std::string windowName, bool fullscreen)
     }
 }
 
-Shader* OpenGL_RenderDevice::CreateShader()
+Shader* OpenGL_RenderDevice::CreateShader(std::vector<char> code)
 {
     return nullptr;
 }

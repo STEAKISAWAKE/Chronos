@@ -10,6 +10,7 @@ class IndexBuffer;
 class VertexBuffer;
 
 class Vertex;
+class GLFWwindow;
 
 /**
  * Render device type to determine what API to use.
@@ -19,10 +20,12 @@ struct RenderDeviceType
     enum Enum
     {
         NoRender,
+        Default,
         OpenGL,
         Vulkan
     };
 };
+
 
 /**
  * Render device to tell the API what to do.
@@ -32,14 +35,17 @@ class RenderDevice
 
 public:
     /** Constructor */ 
-    RenderDevice() {}
+    RenderDevice();
 
     /** Destructor */
-    ~RenderDevice() {}
+    virtual ~RenderDevice();
 
 public:
     /** Current Render API type */
     RenderDeviceType::Enum renderType;
+
+    /** Window for Rendering **/
+    GLFWwindow* window;
 
 public:
     /** Create window to render to. */
@@ -58,5 +64,7 @@ public:
     virtual IndexBuffer* CreateIndexBuffer() { return nullptr; }
 
 };
+
+RenderDevice* CreateRenderDevice(RenderDeviceType::Enum rdt);
 
 #endif // __CHRONOS_RENDER_RENDERDEVICE_H__

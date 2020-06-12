@@ -32,7 +32,7 @@ public:
     Shader(RenderDevice* renderDevice, std::vector<char> code) {}
 
     /** Destructor */
-    ~Shader() {}
+    virtual ~Shader() {}
 
 private:
     RenderDevice* renderDevice;

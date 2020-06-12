@@ -10,7 +10,7 @@ class IndexBuffer;
 class VertexBuffer;
 
 class Vertex;
-class GLFWwindow;
+struct GLFWwindow;
 
 /**
  * Render device type to determine what API to use.
@@ -63,6 +63,14 @@ public:
     /** Create a index buffer */
     virtual IndexBuffer* CreateIndexBuffer() { return nullptr; }
 
+    /** Starts the draw recording and re-records if needed */
+    virtual void BeginRecordDraw(bool recreateCommandBuffers) {}
+
+    /** End Draw */
+    virtual void EndRecordDraw() {}
+
+    /** Get if window is closing */
+    virtual bool ShouldWindowClose();
 };
 
 RenderDevice* CreateRenderDevice(RenderDeviceType::Enum rdt);

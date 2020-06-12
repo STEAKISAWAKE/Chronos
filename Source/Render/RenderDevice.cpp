@@ -1,5 +1,7 @@
 #include "RenderDevice.h"
 
+#include <GLFW/glfw3.h>
+
 #include "OpenGL/OpenGL_RenderDevice.h"
 #include "Vulkan/Vulkan_RenderDevice.h"
 
@@ -65,4 +67,9 @@ RenderDevice* CreateRenderDevice(RenderDeviceType::Enum rdt)
 
     LogError("Render Device", "Could not select a render device!");
     return nullptr;
+}
+
+bool RenderDevice::ShouldWindowClose()
+{
+    return glfwWindowShouldClose(window);
 }

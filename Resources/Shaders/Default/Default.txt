@@ -1,0 +1,11 @@
+{
+	"OpenGL": {
+		"Vertex": "",
+		"Fragment": ""
+	},
+
+	"Vulkan": {
+		"Vertex": "Vulkan/default.vert.spv",
+		"Fragment": "Vulkan/default.frag.spv"
+	}
+}

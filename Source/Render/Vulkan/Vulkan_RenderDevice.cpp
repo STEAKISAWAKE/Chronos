@@ -3,6 +3,7 @@
 #include <cstring>
 #include <assert.h>
 #include <cstdint>
+#include <algorithm>
 #include <set>
 
 #include "GLFW/glfw3.h"
@@ -40,6 +41,8 @@ VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
 
 Vulkan_RenderDevice::Vulkan_RenderDevice()
 {
+    renderType = RenderDeviceType::Vulkan;
+    
     assert(glfwVulkanSupported() != GLFW_TRUE && "Vulkan Render Device: Could not load Vulkan as it is not supported!");
 
     if(enableValidationLayers && !checkValidationLayerSupport())
@@ -277,10 +280,140 @@ Vulkan_RenderDevice::Vulkan_RenderDevice()
         }
     }
 
+    /** RENDER PASS */
+    {
+        VkAttachmentDescription colorAttachment = {};
+        colorAttachment.format = swapChainImageFormat;
+        colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
+        colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+        colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+        colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+        colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+        colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+        colorAttachment.finalLayout =  VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+        
+        VkAttachmentReference colorAttachmentRef = {};
+        colorAttachmentRef.attachment = 0;
+        colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+        VkSubpassDescription subpass = {};
+        subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+        subpass.colorAttachmentCount = 1;
+        subpass.pColorAttachments = &colorAttachmentRef;
+
+        VkRenderPassCreateInfo renderPassInfo = {};
+        renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+        renderPassInfo.attachmentCount = 1;
+        renderPassInfo.pAttachments = &colorAttachment;
+        renderPassInfo.subpassCount = 1;
+        renderPassInfo.pSubpasses = &subpass;
+
+        VULKAN_CHECK(
+            vkCreateRenderPass(device, &renderPassInfo, nullptr, &renderPass),
+            "Could not craete render pass!"
+        )
+    }
+
+    /** FRAMEBUFFERS */
+    {
+        swapChainFramebuffers.resize(swapChainImageViews.size());
+
+        for(size_t i = 0; i < swapChainImageViews.size(); i++)
+        {
+            VkImageView attachments[] = 
+            {
+                swapChainImageViews[i]
+            };
+
+            VkFramebufferCreateInfo framebufferInfo{};
+            framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+            framebufferInfo.renderPass = renderPass;
+            framebufferInfo.attachmentCount = 1;
+            framebufferInfo.pAttachments = attachments;
+            framebufferInfo.width = swapChainExtent.width;
+            framebufferInfo.height = swapChainExtent.height;
+            framebufferInfo.layers = 1;
+
+            VULKAN_CHECK(
+                vkCreateFramebuffer(device, &framebufferInfo, nullptr, &swapChainFramebuffers[i]),
+                "Could not create a framebuffer!"
+            )
+        }
+    }
+
+    /** COMMAND POOL */
+    {
+        QueueFamilyIndices queueFamilyIndices = findQueueFamilies(physicalDevice, surface);
+
+        VkCommandPoolCreateInfo poolInfo = {};
+        poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+        poolInfo.queueFamilyIndex = queueFamilyIndices.graphicsFamily.value();
+        poolInfo.flags = 0;
+
+        VULKAN_CHECK(
+            vkCreateCommandPool(device, &poolInfo, nullptr, &commandPool),
+            "Could not create command pool!"
+        )
+    }
+
+    /** COMMAND BUFFERS */
+    {
+        commandBuffers.resize(swapChainFramebuffers.size());
+
+        VkCommandBufferAllocateInfo allocInfo = {};
+        allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+        allocInfo.commandPool = commandPool;
+        allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+        allocInfo.commandBufferCount = (uint32_t) commandBuffers.size();
+
+        VULKAN_CHECK(
+            vkAllocateCommandBuffers(device, &allocInfo, commandBuffers.data()),
+            "Could not allocate command buffers!"
+        )
+
+        for(size_t i = 0; i < commandBuffers.size(); i++)
+        {
+            VkCommandBufferBeginInfo beginInfo = {};
+            beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+            beginInfo.flags = 0;
+            beginInfo.pInheritanceInfo = nullptr;
+
+            VULKAN_CHECK(
+                vkBeginCommandBuffer(commandBuffers[i], &beginInfo),
+                "Could not begin recording commmand buffer!"
+            )
+
+            VkRenderPassBeginInfo renderPassInfo = {};
+            renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+            renderPassInfo.renderPass = renderPass;
+            renderPassInfo.framebuffer = swapChainFramebuffers[i];
+            renderPassInfo.renderArea.offset = {0, 0};
+            renderPassInfo.renderArea.extent = swapChainExtent;
+
+            VkClearValue clearColor = {0.97f, 0.97f, 0.97f, 1.0f};
+            renderPassInfo.clearValueCount = 1;
+            renderPassInfo.pClearValues = &clearColor;
+
+            vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+
+            
+
+        }
+    }
+
 }
 
 Vulkan_RenderDevice::~Vulkan_RenderDevice()
 {
+    vkDestroyCommandPool(device, commandPool, nullptr);
+    
+    for(auto framebuffer : swapChainFramebuffers)
+    {
+        vkDestroyFramebuffer(device, framebuffer, nullptr);
+    }
+
+    vkDestroyRenderPass(device, renderPass, nullptr);
+
     for(auto imageView : swapChainImageViews)
     {
         vkDestroyImageView(device, imageView, nullptr);
@@ -342,10 +475,15 @@ IndexBuffer* Vulkan_RenderDevice::CreateIndexBuffer()
     return nullptr;
 }
 
-//VertexBuffer* Vulkan_RenderDevice::CreateVertexBuffer(std::vector<Vertex>)
-//{
+void Vulkan_RenderDevice::BeginDraw()
+{
 
-//}
+}
+
+void Vulkan_RenderDevice::EndDraw()
+{
+
+}
 
 // HELPERS //
 bool checkValidationLayerSupport()

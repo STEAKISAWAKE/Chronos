@@ -31,7 +31,7 @@ public:
     Pipeline(RenderDevice* renderDevice, Shader* vertexShader, Shader* fragmentShader) {}
 
     /** Desctructor */
-    ~Pipeline() {}
+    virtual ~Pipeline() {}
 
 public:
     /** Set pipeline int parameter. */

@@ -7,18 +7,27 @@
 
 class Vulkan_RenderDevice;
 
+/**
+ *  Vulkan shaders
+ */
 class Vulkan_Shader
     : public Shader
 {
 
 public:
+    /** Constructor */
     Vulkan_Shader(RenderDevice* renderDevice, std::vector<char> code);
+    
+    /** Destructor */
     ~Vulkan_Shader();
 
-private:
-    Vulkan_RenderDevice* vulkanRenderDevice;
-
+public:
+    /** Shader module handle */
     VkShaderModule shaderModule;
+
+private:
+    /** Vulkan Render Device */
+    Vulkan_RenderDevice* vulkanRenderDevice;
 
 };
 

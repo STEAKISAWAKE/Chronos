@@ -12,13 +12,13 @@ Vulkan_Shader::Vulkan_Shader(RenderDevice* renderDev, std::vector<char> code)
     createInfo.flags = 0;
     createInfo.pCode = reinterpret_cast<const uint32_t*>(code.data());
 
-    //VULKAN_CHECK(
-    //    vkCreateShaderModule(),
-    //    "Could not create shader module!"
-    //);
+    VULKAN_CHECK(
+        vkCreateShaderModule(vulkanRenderDevice->device, &createInfo, nullptr, &shaderModule),
+        "Could not create shader module!"
+    );
 }
 
 Vulkan_Shader::~Vulkan_Shader()
 {
-
+    vkDestroyShaderModule(vulkanRenderDevice->device, shaderModule, nullptr);
 }

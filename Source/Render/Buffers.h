@@ -13,7 +13,7 @@ public:
     VertexBuffer();
 
     /** Destructor */
-    ~VertexBuffer();
+    virtual ~VertexBuffer();
 
 };
 
@@ -28,7 +28,7 @@ public:
     IndexBuffer();
 
     /** Destrutor */
-    ~IndexBuffer();
+    virtual ~IndexBuffer();
 
 };
 

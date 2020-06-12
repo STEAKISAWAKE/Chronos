@@ -64,6 +64,9 @@
         "xloctime": "cpp",
         "xmemory": "cpp",
         "xstddef": "cpp",
-        "xtree": "cpp"
+        "xtree": "cpp",
+        "optional": "cpp",
+        "sstream": "cpp",
+        "unordered_set": "cpp"
     }
 }

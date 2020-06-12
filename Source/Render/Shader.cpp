@@ -1,6 +1,8 @@
 #include "Shader.h"
 
+#include <iostream>
 #include <fstream>
+#include <sstream>
 
 #include "RenderDevice.h"
 #include "File.h"
@@ -45,8 +47,23 @@ ShaderLoader::LoadShader(std::string path, ShaderType::Enum shaderType)
 
     // Load .shader code from file
     std::ifstream jsonFile(path.c_str());
+
+   //std::cout << jsonFile.rdbuf() << std::endl;
+
+    if(!jsonFile.is_open())
+        LogError("Shader Loader", "Error opening file.");
+    
     nlohmann::json shaderJson;
-    jsonFile >> shaderJson;
+
+    try
+    {
+        jsonFile >> shaderJson;
+    }
+    catch(const std::exception& e)
+    {
+        std::cout << jsonFile.rdbuf() << std::endl;
+        std::cerr << e.what() << '\n';
+    }
 
     // Determine which code to use from JSON
     switch(renderDevice->renderType)
@@ -64,7 +81,24 @@ ShaderLoader::LoadShader(std::string path, ShaderType::Enum shaderType)
 
         // Load Vulkan code
         case RenderDeviceType::Vulkan:
-            return LoadShaderOfType(shaderJson["Vulkan"], shaderType);
+            size_t found = path.find_last_of("/\\");
+            std::string pathWithoutFile = std::string(path).substr(0, found);
+
+            std::string shaderPath(pathWithoutFile + "/" + std::string(LoadShaderOfType(shaderJson["Vulkan"], shaderType)));
+
+            Log("Shader Testing", shaderPath.c_str());
+
+            std::ifstream shaderFile(shaderPath.c_str(), std::ios::ate | std::ios::binary);
+            
+            size_t fileSize = (size_t) shaderFile.tellg();
+            std::vector<char> buffer(fileSize);
+
+            shaderFile.seekg(0);
+            shaderFile.read(buffer.data(), fileSize);
+
+            shaderFile.close();
+
+            return buffer;
         break;
 
     };

@@ -44,7 +44,7 @@ public:
     /** Create index buffer for Vulkan */
     IndexBuffer* CreateIndexBuffer() override;
 
-    /** Start Draw, if needed the Command Buffer can be dynamically recreated (Not yet) */
+    /** Start Draw, if needed the Command Buffer can be dynamically recreated */
     void BeginRecordDraw() override;
 
     /** End Draw */

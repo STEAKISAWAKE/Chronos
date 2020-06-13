@@ -34,6 +34,10 @@ public:
     virtual ~Pipeline() {}
 
 public:
+
+    /** Bind to gpu when recording a draw */
+    virtual void Bind() {};
+
     /** Set pipeline int parameter. */
     virtual void SetIntParameter(const std::string name, const int value) {};
 

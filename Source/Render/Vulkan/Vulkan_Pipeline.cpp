@@ -148,6 +148,11 @@ Vulkan_Pipeline::~Vulkan_Pipeline()
     vkDestroyPipelineLayout(vulkanRenderDevice->device, pipelineLayout, nullptr);
 }
 
+void Vulkan_Pipeline::Bind()
+{
+    vkCmdBindPipeline(vulkanRenderDevice->commandBuffers[vulkanRenderDevice->currentCommandBuffer], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
+}
+
 void Vulkan_Pipeline::SetIntParameter(const std::string name, const int value)
 {
 

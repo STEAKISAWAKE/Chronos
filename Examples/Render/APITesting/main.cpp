@@ -17,11 +17,17 @@ int main()
 
     Pipeline* pipeline = renderDevice->CreatePipeline(vertex, fragment);
 
+    renderDevice->BeginRecordDraw();
+
+    pipeline->Bind();
+
+    renderDevice->EndRecordDraw();
+        
+
     while(!renderDevice->ShouldWindowClose())
     {
         glfwPollEvents();
-    
-        
+        renderDevice->DrawFrame();
     }
 
     delete pipeline;

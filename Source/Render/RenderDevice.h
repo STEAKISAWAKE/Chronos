@@ -64,10 +64,13 @@ public:
     virtual IndexBuffer* CreateIndexBuffer() { return nullptr; }
 
     /** Starts the draw recording and re-records if needed */
-    virtual void BeginRecordDraw(bool recreateCommandBuffers) {}
+    virtual void BeginRecordDraw() {}
 
     /** End Draw */
     virtual void EndRecordDraw() {}
+
+    /** Draw new frame to the screen */
+    virtual void DrawFrame() {}
 
     /** Get if window is closing */
     virtual bool ShouldWindowClose();

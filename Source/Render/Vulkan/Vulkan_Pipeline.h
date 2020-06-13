@@ -26,6 +26,10 @@ public:
     ~Vulkan_Pipeline();
 
 public:
+
+    /** Bind to a command buffer */
+    void Bind() override;
+
     /** Set int parameter on pipeline */
     void SetIntParameter(const std::string name, const int value) override;
 

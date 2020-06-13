@@ -190,6 +190,7 @@ Vulkan_RenderDevice::Vulkan_RenderDevice()
         )
 
         vkGetDeviceQueue(device, indices.graphicsFamily.value(), 0, &graphicsQueue);
+        vkGetDeviceQueue(device, indices.presentFamily.value(), 0, &presentQueue);
     }
 
     /** CREATE SWAP CHAIN **/
@@ -301,12 +302,22 @@ Vulkan_RenderDevice::Vulkan_RenderDevice()
         subpass.colorAttachmentCount = 1;
         subpass.pColorAttachments = &colorAttachmentRef;
 
+        VkSubpassDependency dependency = {};
+        dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
+        dependency.dstSubpass = 0;
+        dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+        dependency.srcAccessMask = 0;
+        dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+        dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+
         VkRenderPassCreateInfo renderPassInfo = {};
         renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
         renderPassInfo.attachmentCount = 1;
         renderPassInfo.pAttachments = &colorAttachment;
         renderPassInfo.subpassCount = 1;
         renderPassInfo.pSubpasses = &subpass;
+        renderPassInfo.dependencyCount = 1;
+        renderPassInfo.pDependencies = &dependency;
 
         VULKAN_CHECK(
             vkCreateRenderPass(device, &renderPassInfo, nullptr, &renderPass),
@@ -370,41 +381,30 @@ Vulkan_RenderDevice::Vulkan_RenderDevice()
             vkAllocateCommandBuffers(device, &allocInfo, commandBuffers.data()),
             "Could not allocate command buffers!"
         )
-
-        for(size_t i = 0; i < commandBuffers.size(); i++)
-        {
-            VkCommandBufferBeginInfo beginInfo = {};
-            beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-            beginInfo.flags = 0;
-            beginInfo.pInheritanceInfo = nullptr;
-
-            VULKAN_CHECK(
-                vkBeginCommandBuffer(commandBuffers[i], &beginInfo),
-                "Could not begin recording commmand buffer!"
-            )
-
-            VkRenderPassBeginInfo renderPassInfo = {};
-            renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-            renderPassInfo.renderPass = renderPass;
-            renderPassInfo.framebuffer = swapChainFramebuffers[i];
-            renderPassInfo.renderArea.offset = {0, 0};
-            renderPassInfo.renderArea.extent = swapChainExtent;
-
-            VkClearValue clearColor = {0.97f, 0.97f, 0.97f, 1.0f};
-            renderPassInfo.clearValueCount = 1;
-            renderPassInfo.pClearValues = &clearColor;
-
-            vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
-
-            
-
-        }
     }
 
+    /** CREATE SEMAPHORES */
+    {
+        VkSemaphoreCreateInfo semaphoreInfo = {};
+        semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+
+        VULKAN_CHECK(
+            vkCreateSemaphore(device, &semaphoreInfo, nullptr, &imageAvailableSemaphore),
+            "Could not create image available semaphores!"
+        )
+
+        VULKAN_CHECK(
+            vkCreateSemaphore(device, &semaphoreInfo, nullptr, &renderFinishedSemaphore),
+            "Could not create render finished semaphore!"
+        )
+    }
 }
 
 Vulkan_RenderDevice::~Vulkan_RenderDevice()
 {
+    vkDestroySemaphore(device, renderFinishedSemaphore, nullptr);
+    vkDestroySemaphore(device, imageAvailableSemaphore, nullptr);
+
     vkDestroyCommandPool(device, commandPool, nullptr);
     
     for(auto framebuffer : swapChainFramebuffers)
@@ -475,14 +475,86 @@ IndexBuffer* Vulkan_RenderDevice::CreateIndexBuffer()
     return nullptr;
 }
 
-void Vulkan_RenderDevice::BeginDraw()
+void Vulkan_RenderDevice::BeginRecordDraw()
 {
+    for(size_t i = 0; i < commandBuffers.size(); i++)
+    {
+        VkCommandBufferBeginInfo beginInfo = {};
+        beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+        beginInfo.flags = VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT;
+        beginInfo.pInheritanceInfo = nullptr;
 
+        VULKAN_CHECK(
+            vkBeginCommandBuffer(commandBuffers[i], &beginInfo),
+            "Could not begin recording commmand buffer!"
+        )
+
+        VkRenderPassBeginInfo renderPassInfo = {};
+        renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+        renderPassInfo.renderPass = renderPass;
+        renderPassInfo.framebuffer = swapChainFramebuffers[i];
+        renderPassInfo.renderArea.offset = {0, 0};
+        renderPassInfo.renderArea.extent = swapChainExtent;
+
+        VkClearValue clearColor = {0.97f, 0.1f, 0.2f, 1.0f};
+        renderPassInfo.clearValueCount = 1;
+        renderPassInfo.pClearValues = &clearColor;
+
+        vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+    }
 }
 
-void Vulkan_RenderDevice::EndDraw()
+void Vulkan_RenderDevice::EndRecordDraw()
 {
+    for(size_t i = 0; i < commandBuffers.size(); i++)
+    {
+        vkCmdEndRenderPass(commandBuffers[i]);
 
+        VULKAN_CHECK(
+            vkEndCommandBuffer(commandBuffers[i]),
+            "Could not finish recording a command buffer!"
+        )
+    }
+}
+
+void Vulkan_RenderDevice::DrawFrame()
+{
+    uint32_t imageIndex;
+
+    vkAcquireNextImageKHR(device, swapChain, UINT64_MAX, imageAvailableSemaphore, VK_NULL_HANDLE, &imageIndex);
+
+    VkSubmitInfo submitInfo = {};
+    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+
+    VkSemaphore waitSeamphores[] = {imageAvailableSemaphore};
+    VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
+    submitInfo.waitSemaphoreCount = 1;
+    submitInfo.pWaitSemaphores = waitSeamphores;
+    submitInfo.pWaitDstStageMask = waitStages;
+    submitInfo.commandBufferCount = 1;
+    submitInfo.pCommandBuffers = &commandBuffers[imageIndex];
+
+    VkSemaphore signalSemaphores[] = {renderFinishedSemaphore};
+    submitInfo.signalSemaphoreCount = 1;
+    submitInfo.pSignalSemaphores = signalSemaphores;
+
+    VULKAN_CHECK(
+        vkQueueSubmit(graphicsQueue, 1, &submitInfo, VK_NULL_HANDLE),
+        "Could not submit draw command buffer!"
+    )
+
+    VkPresentInfoKHR presentInfo = {};
+    presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+    presentInfo.waitSemaphoreCount = 1;
+    presentInfo.pWaitSemaphores = signalSemaphores;
+
+    VkSwapchainKHR swapChains[] = {swapChain};
+    presentInfo.swapchainCount = 1;
+    presentInfo.pSwapchains = swapChains;
+    presentInfo.pImageIndices = &imageIndex;
+    presentInfo.pResults = nullptr;
+
+    vkQueuePresentKHR(presentQueue, &presentInfo);
 }
 
 // HELPERS //

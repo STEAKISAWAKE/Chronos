@@ -44,12 +44,14 @@ public:
     /** Create index buffer for Vulkan */
     IndexBuffer* CreateIndexBuffer() override;
 
-    /** Start Draw, if needed the Command Buffer can be dynamically recreated */
-    void BeginDraw(bool recreateCommandBuffers);
+    /** Start Draw, if needed the Command Buffer can be dynamically recreated (Not yet) */
+    void BeginRecordDraw() override;
 
     /** End Draw */
-    void EndDraw();
+    void EndRecordDraw() override;
 
+    /** Draw frame to window */
+    void DrawFrame() override;
 
 public:
     /** Vulkan instance handle */
@@ -99,6 +101,13 @@ public:
 
     /** Command Buffers */
     std::vector<VkCommandBuffer> commandBuffers;
+
+    /** Used for when binding */
+    unsigned int currentCommandBuffer = 0;
+
+    /** Semaphores */
+    VkSemaphore imageAvailableSemaphore;
+    VkSemaphore renderFinishedSemaphore;
 
 };
 

@@ -45,10 +45,10 @@ public:
     IndexBuffer* CreateIndexBuffer() override;
 
     /** Start Draw, if needed the Command Buffer can be dynamically recreated */
-    void BeginDraw(bool recreateCommandBuffers);
+    void BeginRecordDraw() override;
 
     /** End Draw */
-    void EndDraw();
+    void EndRecordDraw() override;
 
 
 public:

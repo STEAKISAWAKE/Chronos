@@ -64,7 +64,7 @@ public:
     virtual IndexBuffer* CreateIndexBuffer() { return nullptr; }
 
     /** Starts the draw recording and re-records if needed */
-    virtual void BeginRecordDraw(bool recreateCommandBuffers) {}
+    virtual void BeginRecordDraw() {}
 
     /** End Draw */
     virtual void EndRecordDraw() {}

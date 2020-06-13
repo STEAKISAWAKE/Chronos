@@ -475,12 +475,12 @@ IndexBuffer* Vulkan_RenderDevice::CreateIndexBuffer()
     return nullptr;
 }
 
-void Vulkan_RenderDevice::BeginDraw()
+void Vulkan_RenderDevice::BeginRecordDraw()
 {
 
 }
 
-void Vulkan_RenderDevice::EndDraw()
+void Vulkan_RenderDevice::EndRecordDraw()
 {
 
 }

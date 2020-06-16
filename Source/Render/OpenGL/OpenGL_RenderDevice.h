@@ -13,7 +13,7 @@ class OpenGL_RenderDevice
 {
 
 public:
-    OpenGL_RenderDevice();
+    OpenGL_RenderDevice(std::string winName);
     ~OpenGL_RenderDevice();
 
 public:

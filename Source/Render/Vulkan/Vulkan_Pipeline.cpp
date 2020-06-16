@@ -5,10 +5,68 @@
 
 Vulkan_Pipeline::Vulkan_Pipeline(RenderDevice* renderDevice, Shader* vShader, Shader* fShader)
 {
-    
+    vertShader = vShader;
+    fragShader = fShader;
     vulkanRenderDevice = static_cast<Vulkan_RenderDevice*>(renderDevice);
-    vertexShader = static_cast<Vulkan_Shader*>(vShader);
-    fragmentShader = static_cast<Vulkan_Shader*>(fShader);
+
+    RecreateForSwapchain();
+}
+
+Vulkan_Pipeline::~Vulkan_Pipeline()
+{
+    vkDestroyPipeline(vulkanRenderDevice->device, graphicsPipeline, nullptr);
+    vkDestroyPipelineLayout(vulkanRenderDevice->device, pipelineLayout, nullptr);
+}
+
+void Vulkan_Pipeline::Bind()
+{
+    vkCmdBindPipeline(vulkanRenderDevice->commandBuffers[vulkanRenderDevice->currentCommandBuffer], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
+}
+
+void Vulkan_Pipeline::SetIntParameter(const std::string name, const int value)
+{
+
+}
+
+void Vulkan_Pipeline::SetFloatParameter(const std::string name, const float value)
+{
+
+}
+
+void Vulkan_Pipeline::SetVector2Parameter(const std::string name, const glm::vec2 value)
+{
+
+}
+
+void Vulkan_Pipeline::SetVector3Parameter(const std::string name, const glm::vec3 value)
+{
+
+}
+
+void Vulkan_Pipeline::SetVector4Parameter(const std::string name, const glm::vec4 value)
+{
+
+}
+
+void Vulkan_Pipeline::SetMatrix2Parameter(const std::string name, const glm::mat2x2 value)
+{
+
+}
+
+void Vulkan_Pipeline::SetMatrix3Parameter(const std::string name, const glm::mat3x3 value)
+{
+
+}
+
+void Vulkan_Pipeline::SetMatrix4Parameter(const std::string name, const glm::mat4x4 value)
+{
+
+}
+
+void Vulkan_Pipeline::RecreateForSwapchain()
+{
+    vertexShader = static_cast<Vulkan_Shader*>(vertShader);
+    fragmentShader = static_cast<Vulkan_Shader*>(fragShader);
 
     VkPipelineShaderStageCreateInfo vertShaderStageInfo = {};
     vertShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -142,53 +200,8 @@ Vulkan_Pipeline::Vulkan_Pipeline(RenderDevice* renderDevice, Shader* vShader, Sh
     )
 }
 
-Vulkan_Pipeline::~Vulkan_Pipeline()
+void Vulkan_Pipeline::DeleteForSwapchain()
 {
     vkDestroyPipeline(vulkanRenderDevice->device, graphicsPipeline, nullptr);
     vkDestroyPipelineLayout(vulkanRenderDevice->device, pipelineLayout, nullptr);
-}
-
-void Vulkan_Pipeline::Bind()
-{
-    vkCmdBindPipeline(vulkanRenderDevice->commandBuffers[vulkanRenderDevice->currentCommandBuffer], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
-}
-
-void Vulkan_Pipeline::SetIntParameter(const std::string name, const int value)
-{
-
-}
-
-void Vulkan_Pipeline::SetFloatParameter(const std::string name, const float value)
-{
-
-}
-
-void Vulkan_Pipeline::SetVector2Parameter(const std::string name, const glm::vec2 value)
-{
-
-}
-
-void Vulkan_Pipeline::SetVector3Parameter(const std::string name, const glm::vec3 value)
-{
-
-}
-
-void Vulkan_Pipeline::SetVector4Parameter(const std::string name, const glm::vec4 value)
-{
-
-}
-
-void Vulkan_Pipeline::SetMatrix2Parameter(const std::string name, const glm::mat2x2 value)
-{
-
-}
-
-void Vulkan_Pipeline::SetMatrix3Parameter(const std::string name, const glm::mat3x3 value)
-{
-
-}
-
-void Vulkan_Pipeline::SetMatrix4Parameter(const std::string name, const glm::mat4x4 value)
-{
-
 }

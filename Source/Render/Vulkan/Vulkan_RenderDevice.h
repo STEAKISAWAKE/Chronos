@@ -22,7 +22,7 @@ class Vulkan_RenderDevice
 
 public:
     /** Constructor */
-    Vulkan_RenderDevice();
+    Vulkan_RenderDevice(std::string winName);
 
     /** Destructor */
     ~Vulkan_RenderDevice();
@@ -52,6 +52,8 @@ public:
 
     /** Draw frame to window */
     void DrawFrame() override;
+
+    void DoneRendering() override;
 
 public:
     /** Vulkan instance handle */
@@ -105,9 +107,35 @@ public:
     /** Used for when binding */
     unsigned int currentCommandBuffer = 0;
 
-    /** Semaphores */
-    VkSemaphore imageAvailableSemaphore;
-    VkSemaphore renderFinishedSemaphore;
+    /** GPU-CPU Syncronization*/
+    std::vector<VkSemaphore> imageAvailableSemaphores;
+    std::vector<VkSemaphore> renderFinishedSemaphores;
+    std::vector<VkFence> inFlightFences;
+    std::vector<VkFence> imagesInFlight;
+
+    /* Get current frame */
+    size_t currentFrame = 0;
+
+public:
+    void CreateInstance();
+    void SetupDebugMessenger();
+    void CreateSurface(std::string winName);
+    void PickPhysicalDevice();
+    void CreateLogicalDevice();
+    void CreateSwapChain();
+    void CreateSwapChainImageViews();
+    void CreateRenderPass();
+    void CreateFramebuffers();
+    void CreateCommandPool();
+    void CreateCommandBuffers();
+    void CreateSyncObjects();
+
+    void CleanupSwapChain();
+    void RecreateSwapChain();
+
+private:
+    // A list of pipeline pointers for when we have to recreate the swapchain
+    std::vector<Vulkan_Pipeline*> pipelines;
 
 };
 
@@ -175,5 +203,7 @@ struct SwapChainSupportDetails
     std::vector<VkSurfaceFormatKHR> formats;
     std::vector<VkPresentModeKHR> presentModes;
 };
+
+const int MAX_FRAMES_IN_FLIGHT = 2;
 
 #endif // __CHRONOS_RENDER_VULKAN_RENDERDEVICE_H__

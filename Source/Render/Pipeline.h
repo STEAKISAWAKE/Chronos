@@ -62,6 +62,10 @@ public:
     /** Set pipeline Matrix 4 parameter. */
     virtual void SetMatrix4Parameter(const std::string name, const glm::mat4x4 value) {};
 
+public:
+    Shader* vertShader;
+    Shader* fragShader;
+
 private: 
     RenderDevice* renderDevice;
 

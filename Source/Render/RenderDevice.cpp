@@ -13,6 +13,11 @@ RenderDeviceType::Enum defaultRenderDeviceType = RenderDeviceType::Vulkan;
 
 RenderDevice::RenderDevice()
 {
+    
+}
+
+RenderDevice::RenderDevice(std::string winName)
+{
 
 }
 
@@ -21,44 +26,44 @@ RenderDevice::~RenderDevice()
     
 }
 
-RenderDevice* CreateRenderDevice(RenderDeviceType::Enum rdt)
+RenderDevice* CreateRenderDevice(RenderDeviceType::Enum rdt, std::string windowName)
 {
     switch(rdt)
     {
         case RenderDeviceType::NoRender:
-            return new RenderDevice();
+            return new RenderDevice(windowName);
         break; 
 
         case RenderDeviceType::Default:
             switch(defaultRenderDeviceType)
             {
                 case RenderDeviceType::OpenGL:
-                    return new OpenGL_RenderDevice();
+                    return new OpenGL_RenderDevice(windowName);
                 break;
 
                 case RenderDeviceType::Vulkan:
-                    return new Vulkan_RenderDevice();
+                    return new Vulkan_RenderDevice(windowName);
                 break;
             }
         break;
 
         case RenderDeviceType::OpenGL:
-            return new OpenGL_RenderDevice();
+            return new OpenGL_RenderDevice(windowName);
         break;  
 
         case RenderDeviceType::Vulkan:
-            return new Vulkan_RenderDevice();
+            return new Vulkan_RenderDevice(windowName);
         break;
         
         default:
             switch(defaultRenderDeviceType)
             {
                 case RenderDeviceType::OpenGL:
-                    return new OpenGL_RenderDevice();
+                    return new OpenGL_RenderDevice(windowName);
                 break;
 
                 case RenderDeviceType::Vulkan:
-                    return new Vulkan_RenderDevice();
+                    return new Vulkan_RenderDevice(windowName);
                 break;
             }
         break;

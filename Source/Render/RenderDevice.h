@@ -26,7 +26,6 @@ struct RenderDeviceType
     };
 };
 
-
 /**
  * Render device to tell the API what to do.
  */ 
@@ -34,8 +33,11 @@ class RenderDevice
 {
 
 public:
-    /** Constructor */ 
+    /** Default Constructor */
     RenderDevice();
+
+    /** Constructor */ 
+    RenderDevice(std::string winName);
 
     /** Destructor */
     virtual ~RenderDevice();
@@ -72,10 +74,22 @@ public:
     /** Draw new frame to the screen */
     virtual void DrawFrame() {}
 
+    /** Used to deactivate anything that is needed to before deconstruction. */
+    virtual void DoneRendering() {}
+
+    virtual void SetDrawFunction(void (*drawFunc)(RenderDevice* renderDevice)) { drawFunction = drawFunc; }
+
     /** Get if window is closing */
     virtual bool ShouldWindowClose();
+
+public:
+    std::string windowName;
+
+    // Draw function pointer
+    void (*drawFunction)(RenderDevice* renderDevice);
+
 };
 
-RenderDevice* CreateRenderDevice(RenderDeviceType::Enum rdt);
+RenderDevice* CreateRenderDevice(RenderDeviceType::Enum rdt, std::string windowName);
 
 #endif // __CHRONOS_RENDER_RENDERDEVICE_H__

@@ -54,6 +54,10 @@ public:
     /** Set Matrix 4 parameter on pipeline */
     void SetMatrix4Parameter(const std::string name, const glm::mat4x4 value) override;
 
+public:
+    void RecreateForSwapchain();
+    void DeleteForSwapchain();
+
 private:
     Vulkan_RenderDevice* vulkanRenderDevice;
     Vulkan_Shader* vertexShader;

@@ -29,6 +29,6 @@ void assert_msg(bool expr, const char* msg)
 void assert_msg(bool expr, const char* msg)
 {
     if(!expr)
-        warn_bug(msg);
+        LogError("BUG: ", msg);
 }
 #endif // NDEBUG

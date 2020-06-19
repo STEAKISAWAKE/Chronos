@@ -16,7 +16,7 @@ RenderDevice::RenderDevice()
     
 }
 
-RenderDevice::RenderDevice(std::string winName)
+RenderDevice::RenderDevice(std::function<void(RenderDevice*)> drawFunc, std::string winName)
 {
 
 }
@@ -26,44 +26,44 @@ RenderDevice::~RenderDevice()
     
 }
 
-RenderDevice* CreateRenderDevice(RenderDeviceType::Enum rdt, std::string windowName)
+RenderDevice* CreateRenderDevice(std::function<void(RenderDevice*)> drawFunc, RenderDeviceType::Enum rdt, std::string windowName)
 {
     switch(rdt)
     {
         case RenderDeviceType::NoRender:
-            return new RenderDevice(windowName);
+            return new RenderDevice(drawFunc, windowName);
         break; 
 
         case RenderDeviceType::Default:
             switch(defaultRenderDeviceType)
             {
                 case RenderDeviceType::OpenGL:
-                    return new OpenGL_RenderDevice(windowName);
+                    return new OpenGL_RenderDevice(drawFunc, windowName);
                 break;
 
                 case RenderDeviceType::Vulkan:
-                    return new Vulkan_RenderDevice(windowName);
+                    return new Vulkan_RenderDevice(drawFunc, windowName);
                 break;
             }
         break;
 
         case RenderDeviceType::OpenGL:
-            return new OpenGL_RenderDevice(windowName);
+            return new OpenGL_RenderDevice(drawFunc, windowName);
         break;  
 
         case RenderDeviceType::Vulkan:
-            return new Vulkan_RenderDevice(windowName);
+            return new Vulkan_RenderDevice(drawFunc, windowName);
         break;
         
         default:
             switch(defaultRenderDeviceType)
             {
                 case RenderDeviceType::OpenGL:
-                    return new OpenGL_RenderDevice(windowName);
+                    return new OpenGL_RenderDevice(drawFunc, windowName);
                 break;
 
                 case RenderDeviceType::Vulkan:
-                    return new Vulkan_RenderDevice(windowName);
+                    return new Vulkan_RenderDevice(drawFunc, windowName);
                 break;
             }
         break;

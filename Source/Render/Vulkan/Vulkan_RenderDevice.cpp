@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <set>
 
+#define GLFW_INCLUDE_VULKAN
 #include "GLFW/glfw3.h"
 
 #include "Vulkan_Shader.h"
@@ -38,17 +39,21 @@ SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device, VkSurface
 VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
 VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
 VkExtent2D chooseSwapExtent(GLFWwindow* window, const VkSurfaceCapabilitiesKHR& capabilities);
+void glfwError(int id, const char* description);
 
-Vulkan_RenderDevice::Vulkan_RenderDevice(std::string winName)
+Vulkan_RenderDevice::Vulkan_RenderDevice(std::function<void(RenderDevice*)> drawFunc, std::string winName)
 {
     renderType = RenderDeviceType::Vulkan;
-    
+    drawFunction = drawFunc;
+
     assert(glfwVulkanSupported() != GLFW_TRUE && "Vulkan Render Device: Could not load Vulkan as it is not supported!");
 
     if(enableValidationLayers && !checkValidationLayerSupport())
     {
         LogError("Vulkan Validation Layers", "Could not use validation layers, but requested!");
     }
+
+    glfwSetErrorCallback(glfwError);
 
     glfwInit();
 
@@ -79,7 +84,19 @@ Vulkan_RenderDevice::Vulkan_RenderDevice(std::string winName)
 
 Vulkan_RenderDevice::~Vulkan_RenderDevice()
 {
-    CleanupSwapChain();
+   for(auto framebuffer : swapChainFramebuffers)
+    {
+        vkDestroyFramebuffer(device, framebuffer, nullptr);
+    }
+    
+    vkFreeCommandBuffers(device, commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
+
+    vkDestroyRenderPass(device, renderPass, nullptr);
+
+    for(auto imageView : swapChainImageViews)
+        vkDestroyImageView(device, imageView, nullptr);
+
+    vkDestroySwapchainKHR(device, swapChain, nullptr);
 
     for(size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
     {
@@ -104,7 +121,7 @@ Vulkan_RenderDevice::~Vulkan_RenderDevice()
     glfwTerminate();
 }
 
-void Vulkan_RenderDevice::CreateWindow(std::string windowName, bool fullscreen)
+void Vulkan_RenderDevice::CreateWin(std::string windowName, bool fullscreen)
 {
 
     GLFWmonitor* monitor = glfwGetPrimaryMonitor();
@@ -172,11 +189,18 @@ void Vulkan_RenderDevice::BeginRecordDraw()
         renderPassInfo.pClearValues = &clearColor;
 
         vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+
     }
+
+
+
 }
 
 void Vulkan_RenderDevice::EndRecordDraw()
 {
+    
+
+
     for(size_t i = 0; i < commandBuffers.size(); i++)
     {
         vkCmdEndRenderPass(commandBuffers[i]);
@@ -186,6 +210,11 @@ void Vulkan_RenderDevice::EndRecordDraw()
             "Could not finish recording a command buffer!"
         )
     }
+}
+
+void Vulkan_RenderDevice::ReadyToDraw()
+{
+    drawFunction(this);
 }
 
 void Vulkan_RenderDevice::DrawFrame()
@@ -291,7 +320,7 @@ void Vulkan_RenderDevice::CreateInstance()
     }
     else
     {
-        instanceCreateInfo.enabledExtensionCount = 0;
+        instanceCreateInfo.enabledLayerCount = 0;
         instanceCreateInfo.pNext = nullptr;
     }
 
@@ -320,12 +349,19 @@ void Vulkan_RenderDevice::SetupDebugMessenger()
 
 void Vulkan_RenderDevice::CreateSurface(std::string winName)
 {
-    CreateWindow(winName, false);
+    CreateWin(winName, false);
 
-    VULKAN_CHECK(
-        glfwCreateWindowSurface(instance, window, nullptr, &surface),
-        "Could not create window surface!"
-    )
+    VkResult result = glfwCreateWindowSurface(instance, window, nullptr, &surface);
+
+    if(result == GLFW_API_UNAVAILABLE)
+    {
+        LogError("Vulkan Create Window Surface", "GLFW API not available!");
+    }
+    else if(result == VK_ERROR_INITIALIZATION_FAILED)
+    {
+        LogError("Vulkan Create Window Suface", "Vk Error Initalization failed!");
+    }
+    
 }
 
 void Vulkan_RenderDevice::PickPhysicalDevice()
@@ -663,6 +699,8 @@ void Vulkan_RenderDevice::RecreateSwapChain()
 
     CreateFramebuffers();
     CreateCommandBuffers();
+
+    drawFunction(this);
 }
 
 // HELPERS //
@@ -710,7 +748,7 @@ std::vector<const char*> getRequiredExtensions()
     return extensions;
 }
 
-VkBool32 debugCallback(
+VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
     VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
     VkDebugUtilsMessageTypeFlagsEXT messageType,
     const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
@@ -879,9 +917,6 @@ VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& avai
     return VK_PRESENT_MODE_FIFO_KHR;
 }
 
-#define WIDTH 100
-#define HEIGHT 200
-
 VkExtent2D chooseSwapExtent(GLFWwindow* window, const VkSurfaceCapabilitiesKHR& capabilities)
 {
     if(capabilities.currentExtent.width != UINT32_MAX)
@@ -893,11 +928,16 @@ VkExtent2D chooseSwapExtent(GLFWwindow* window, const VkSurfaceCapabilitiesKHR& 
         int width, height;
         glfwGetFramebufferSize(window, &width, &height);
 
-        VkExtent2D actualExtent = {width, height};
+        VkExtent2D actualExtent = {(uint32_t)width, (uint32_t)height};
 
         actualExtent.width = std::max(capabilities.minImageExtent.width, std::min(capabilities.maxImageExtent.width, actualExtent.width));
         actualExtent.height = std::max(capabilities.minImageExtent.height, std::min(capabilities.maxImageExtent.height, actualExtent.height));
         
         return actualExtent;
     }
+}
+
+void glfwError(int id, const char* description)
+{
+    LogError("GLFW Error", description);
 }

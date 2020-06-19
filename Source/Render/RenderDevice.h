@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <functional>
 
 class Shader;
 class Pipeline;
@@ -37,7 +38,7 @@ public:
     RenderDevice();
 
     /** Constructor */ 
-    RenderDevice(std::string winName);
+    RenderDevice(std::function<void(RenderDevice*)> drawFunc, std::string winName);
 
     /** Destructor */
     virtual ~RenderDevice();
@@ -51,7 +52,7 @@ public:
 
 public:
     /** Create window to render to. */
-    virtual void CreateWindow(std::string windowName, bool fullscreen) {}
+    virtual void CreateWin(std::string windowName, bool fullscreen) {}
 
     /** Create a shader module */
     virtual Shader* CreateShader(std::vector<char> code) { return nullptr; }
@@ -71,13 +72,17 @@ public:
     /** End Draw */
     virtual void EndRecordDraw() {}
 
+    /** Ready to draw (all pipelines and shaders must be created!) */
+    virtual void ReadyToDraw() {}
+
     /** Draw new frame to the screen */
     virtual void DrawFrame() {}
 
     /** Used to deactivate anything that is needed to before deconstruction. */
     virtual void DoneRendering() {}
 
-    virtual void SetDrawFunction(void (*drawFunc)(RenderDevice* renderDevice)) { drawFunction = drawFunc; }
+    /** Sets draw function */
+    virtual void SetDrawFunction(std::function<void(RenderDevice*)> drawFunc) { drawFunction = drawFunc; }
 
     /** Get if window is closing */
     virtual bool ShouldWindowClose();
@@ -86,10 +91,12 @@ public:
     std::string windowName;
 
     // Draw function pointer
-    void (*drawFunction)(RenderDevice* renderDevice);
+    std::function<void(RenderDevice*)> drawFunction;
+
+    bool createdDrawBuffers = false;
 
 };
 
-RenderDevice* CreateRenderDevice(RenderDeviceType::Enum rdt, std::string windowName);
+RenderDevice* CreateRenderDevice(std::function<void(RenderDevice*)> drawFunc, RenderDeviceType::Enum rdt, std::string windowName);
 
 #endif // __CHRONOS_RENDER_RENDERDEVICE_H__

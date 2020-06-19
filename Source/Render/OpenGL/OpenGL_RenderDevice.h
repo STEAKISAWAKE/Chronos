@@ -13,11 +13,11 @@ class OpenGL_RenderDevice
 {
 
 public:
-    OpenGL_RenderDevice(std::string winName);
+    OpenGL_RenderDevice(std::function<void(RenderDevice*)> drawFunc, std::string winName);
     ~OpenGL_RenderDevice();
 
 public:
-    void CreateWindow(std::string windowName, bool fullscreen) override;
+    void CreateWin(std::string windowName, bool fullscreen) override;
     Shader* CreateShader(std::vector<char> code) override;
     Pipeline* CreatePipeline(Shader* vertexShader, Shader* fragmentShader) override;
     VertexBuffer* CreateVertexBuffer() override;

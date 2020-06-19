@@ -14,13 +14,16 @@ Vulkan_Pipeline::Vulkan_Pipeline(RenderDevice* renderDevice, Shader* vShader, Sh
 
 Vulkan_Pipeline::~Vulkan_Pipeline()
 {
-    vkDestroyPipeline(vulkanRenderDevice->device, graphicsPipeline, nullptr);
-    vkDestroyPipelineLayout(vulkanRenderDevice->device, pipelineLayout, nullptr);
+    DeleteForSwapchain();
 }
 
 void Vulkan_Pipeline::Bind()
 {
-    vkCmdBindPipeline(vulkanRenderDevice->commandBuffers[vulkanRenderDevice->currentCommandBuffer], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
+    for(auto buffer : vulkanRenderDevice->commandBuffers)
+    {
+        vkCmdBindPipeline(buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
+    }
+
 }
 
 void Vulkan_Pipeline::SetIntParameter(const std::string name, const int value)

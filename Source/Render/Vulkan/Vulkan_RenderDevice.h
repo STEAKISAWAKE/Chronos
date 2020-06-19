@@ -4,6 +4,7 @@
 #include "RenderDevice.h"
 
 #include <vulkan/vulkan.h>
+#include <GLFW/glfw3.h>
 
 #include <vector>
 #include <optional>
@@ -22,7 +23,7 @@ class Vulkan_RenderDevice
 
 public:
     /** Constructor */
-    Vulkan_RenderDevice(std::string winName);
+    Vulkan_RenderDevice(std::function<void(RenderDevice*)> drawFunc, std::string winName);
 
     /** Destructor */
     ~Vulkan_RenderDevice();
@@ -30,7 +31,7 @@ public:
 public:
 
     /** Create window for Vulkan */
-    void CreateWindow(std::string windowName, bool fullscreen) override;
+    void CreateWin(std::string windowName, bool fullscreen) override;
 
     /** Create shader for Vulkan */
     Shader* CreateShader(std::vector<char> code) override;
@@ -49,6 +50,9 @@ public:
 
     /** End Draw */
     void EndRecordDraw() override;
+
+    /** Tell Vulkan to create the draw buffers */
+    void ReadyToDraw() override;
 
     /** Draw frame to window */
     void DrawFrame() override;

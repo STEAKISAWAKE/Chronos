@@ -3,7 +3,7 @@
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 
-OpenGL_RenderDevice::OpenGL_RenderDevice(std::string winName)
+OpenGL_RenderDevice::OpenGL_RenderDevice(std::function<void(RenderDevice*)> drawFunc, std::string winName)
 {
     glfwInit();
 }
@@ -13,7 +13,7 @@ OpenGL_RenderDevice::~OpenGL_RenderDevice()
     glfwTerminate();
 }
 
-void OpenGL_RenderDevice::CreateWindow(std::string windowName, bool fullscreen)
+void OpenGL_RenderDevice::CreateWin(std::string windowName, bool fullscreen)
 {
     GLFWmonitor* monitor = glfwGetPrimaryMonitor();
     const GLFWvidmode* vidmode = glfwGetVideoMode(monitor);

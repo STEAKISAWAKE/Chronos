@@ -2,5 +2,5 @@
 
 std::string getExePath()
 {
-    return std::string(std::filesystem::current_path()) + "/";
+    return std::string(std::filesystem::current_path().string()) + "/";
 }

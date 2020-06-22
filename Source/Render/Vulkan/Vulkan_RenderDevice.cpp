@@ -11,6 +11,8 @@
 
 #include "Vulkan_Shader.h"
 #include "Vulkan_Pipeline.h"
+#include "Vulkan_Buffers.h"
+#include "Vulkan_Vertex.h"
 
 bool checkValidationLayerSupport();
 std::vector<const char*> getRequiredExtensions();
@@ -153,14 +155,14 @@ Pipeline* Vulkan_RenderDevice::CreatePipeline(Shader* vertexShader, Shader* frag
     return newPipe;
 }
 
-VertexBuffer* Vulkan_RenderDevice::CreateVertexBuffer()
+VertexBuffer* Vulkan_RenderDevice::CreateVertexBuffer(std::vector<Vertex> Vertices)
 {
-    return nullptr;
+    return new Vulkan_VertexBuffer(this, Vertices);
 }
 
-IndexBuffer* Vulkan_RenderDevice::CreateIndexBuffer()
+IndexBuffer* Vulkan_RenderDevice::CreateIndexBuffer(std::vector<uint32_t> Indices)
 {
-    return nullptr;
+    return new Vulkan_IndexBuffer(this, Indices);
 }
 
 void Vulkan_RenderDevice::BeginRecordDraw()
@@ -198,11 +200,10 @@ void Vulkan_RenderDevice::BeginRecordDraw()
 
 void Vulkan_RenderDevice::EndRecordDraw()
 {
-    
-
-
     for(size_t i = 0; i < commandBuffers.size(); i++)
     {
+        vkCmdDrawIndexed(commandBuffers[i], 6, 1, 0, 0, 0);
+
         vkCmdEndRenderPass(commandBuffers[i]);
 
         VULKAN_CHECK(
@@ -212,7 +213,7 @@ void Vulkan_RenderDevice::EndRecordDraw()
     }
 }
 
-void Vulkan_RenderDevice::ReadyToDraw()
+void Vulkan_RenderDevice::DrawBuffers()
 {
     drawFunction(this);
 }

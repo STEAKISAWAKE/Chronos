@@ -2,12 +2,23 @@
 
 #include "Vulkan_RenderDevice.h"
 #include "Vulkan_Shader.h"
+#include "Vulkan_Vertex.h"
 
 Vulkan_Pipeline::Vulkan_Pipeline(RenderDevice* renderDevice, Shader* vShader, Shader* fShader)
 {
     vertShader = vShader;
     fragShader = fShader;
     vulkanRenderDevice = static_cast<Vulkan_RenderDevice*>(renderDevice);
+
+    VkDescriptorSetLayoutBinding uboLayoutBinding = {};
+    uboLayoutBinding.binding = 0;
+    uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    uboLayoutBinding.descriptorCount = 1;
+    uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+    uboLayoutBinding.pImmutableSamplers = nullptr;
+
+    VkDescriptorSetLayoutCreateInfo layoutInfo = {};
+    layoutInfo.sType = 
 
     RecreateForSwapchain();
 }
@@ -86,11 +97,14 @@ void Vulkan_Pipeline::RecreateForSwapchain()
     VkPipelineShaderStageCreateInfo shaderStages[] = {vertShaderStageInfo, fragShaderStageInfo};
 
     VkPipelineVertexInputStateCreateInfo vertexInputInfo = {};
+    auto bindingDescription = Vulkan_Vertex::getBindingDescription();
+    auto attributeDescriptions = Vulkan_Vertex::getAttributeDescriptions();
+
     vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-    vertexInputInfo.vertexBindingDescriptionCount = 0;
-    vertexInputInfo.pVertexBindingDescriptions = nullptr;
-    vertexInputInfo.vertexAttributeDescriptionCount = 0;
-    vertexInputInfo.pVertexAttributeDescriptions = nullptr;
+    vertexInputInfo.vertexBindingDescriptionCount = 1;
+    vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size());
+    vertexInputInfo.pVertexBindingDescriptions = &bindingDescription;
+    vertexInputInfo.pVertexAttributeDescriptions = attributeDescriptions.data();
 
     VkPipelineInputAssemblyStateCreateInfo inputAssembly = {};
     inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;

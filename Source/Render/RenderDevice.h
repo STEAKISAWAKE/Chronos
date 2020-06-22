@@ -7,10 +7,10 @@
 
 class Shader;
 class Pipeline;
+class Vertex;
 class IndexBuffer;
 class VertexBuffer;
 
-class Vertex;
 struct GLFWwindow;
 
 /**
@@ -61,10 +61,10 @@ public:
     virtual Pipeline* CreatePipeline(Shader* vertexShader, Shader* fragmentShader) { return nullptr; }
 
     /** Create a vertex buffer */
-    virtual VertexBuffer* CreateVertexBuffer() { return nullptr; }
+    virtual VertexBuffer* CreateVertexBuffer(std::vector<Vertex> Vertices) { return nullptr; }
 
     /** Create a index buffer */
-    virtual IndexBuffer* CreateIndexBuffer() { return nullptr; }
+    virtual IndexBuffer* CreateIndexBuffer(std::vector<uint32_t> Indices) { return nullptr; }
 
     /** Starts the draw recording and re-records if needed */
     virtual void BeginRecordDraw() {}
@@ -73,7 +73,7 @@ public:
     virtual void EndRecordDraw() {}
 
     /** Ready to draw (all pipelines and shaders must be created!) */
-    virtual void ReadyToDraw() {}
+    virtual void DrawBuffers() {}
 
     /** Draw new frame to the screen */
     virtual void DrawFrame() {}

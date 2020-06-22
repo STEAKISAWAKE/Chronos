@@ -40,12 +40,12 @@ Pipeline* OpenGL_RenderDevice::CreatePipeline(Shader* vertexShader, Shader* frag
     return nullptr;
 }
 
-VertexBuffer* OpenGL_RenderDevice::CreateVertexBuffer()
+VertexBuffer* OpenGL_RenderDevice::CreateVertexBuffer(std::vector<Vertex> Vertices)
 {
     return nullptr;
 }
 
-IndexBuffer* OpenGL_RenderDevice::CreateIndexBuffer()
+IndexBuffer* OpenGL_RenderDevice::CreateIndexBuffer(std::vector<uint32_t> Indices)
 {
     return nullptr;
 }

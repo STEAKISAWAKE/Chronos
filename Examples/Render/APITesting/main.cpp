@@ -1,10 +1,13 @@
 #include <memory>
 #include <iostream>
 #include <string>
+#include <vector>
 
 #include <Render/RenderDevice.h>
 #include <Render/Shader.h>
 #include <Render/Pipeline.h>
+#include <Render/Buffers.h>
+#include <Render/Vertex.h>
 
 #include <Utilities/Path.h>
 
@@ -17,6 +20,8 @@ RenderDevice* renderDevice;
 Shader* vertex;
 Shader* fragment;
 Pipeline* pipeline;
+VertexBuffer* vertexBuffer;
+IndexBuffer* indexBuffer;
 
 void Draw(RenderDevice* renDev);
 
@@ -40,8 +45,25 @@ int main()
     */
     pipeline = renderDevice->CreatePipeline(vertex, fragment);
 
+    /* We can now create our vertex/index buffers */
+
+    const std::vector<Vertex> vertices = {
+        {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+        {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
+        {{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
+        {{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}
+    };
+
+    const std::vector<uint32_t> indices = 
+    {
+        0, 1, 2, 2, 3, 0
+    };
+
+    vertexBuffer = renderDevice->CreateVertexBuffer(vertices);
+    indexBuffer = renderDevice->CreateIndexBuffer(indices);
+
     /** Ready to draw allows the render to know that all of the pipelines and shaders have been created. */
-    renderDevice->ReadyToDraw();
+    renderDevice->DrawBuffers();
 
     double previousTime = glfwGetTime();
     int frameCount = 0;
@@ -65,6 +87,18 @@ int main()
         /* This will change when there is a proper windowing system */
         glfwPollEvents();
 
+        if(glfwGetKey(renderDevice->window, GLFW_KEY_0) == GLFW_PRESS)
+        {
+            const std::vector<Vertex> newVertices = {
+                {{-0.5f, -1.0f}, {1.0f, 0.0f, 0.0f}},
+                {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
+                {{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
+                {{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}
+            };
+
+            vertexBuffer->Set(newVertices);
+        }
+
         /* When we want to draw to the screen we use this */
         renderDevice->DrawFrame();
     }
@@ -72,6 +106,9 @@ int main()
     renderDevice->DoneRendering();
 
     /* Anything that you create must be deleted, anything that Chronos creates it deletes. */
+    delete indexBuffer;
+    delete vertexBuffer;
+    
     delete pipeline;
 
     delete fragment;
@@ -81,15 +118,9 @@ int main()
 }
 
 /*
-    For the draw function we are given the render device,
-    the return boolean is if we need to record the draw buffers,
-    if we dont want to draw any new meshes or change materials we dont need to return true ever.
-    It is efficent to never have to but it will have to happen in most games.
-
-    If you are making a multiplayer game that a mesh dissapears when they die and are respawed at some point,
-    just make the mesh invisable and make it reappear sometime else at a different place.
+    In the draw function we are given the render device.
+    If another draw command needs to happen this draw function will be recalled.
 */
-
 void Draw(RenderDevice* renDev)
 {
     /*
@@ -100,6 +131,11 @@ void Draw(RenderDevice* renDev)
 
         /* Binding pipelines is like binding shaders in opengl, you can also edit their variables. */
         pipeline->Bind();
+
+        /* Bind the vertex/index buffer */
+        vertexBuffer->Bind();
+        indexBuffer->Bind();
+
 
     /* Ending a draw recording */
     renDev->EndRecordDraw();

@@ -40,10 +40,10 @@ public:
     Pipeline* CreatePipeline(Shader* vertexShader, Shader* fragmentShader) override;
 
     /** Create vertex buffer for Vulkan */
-    VertexBuffer* CreateVertexBuffer() override;
+    VertexBuffer* CreateVertexBuffer(std::vector<Vertex> Vertices) override;
 
     /** Create index buffer for Vulkan */
-    IndexBuffer* CreateIndexBuffer() override;
+    IndexBuffer* CreateIndexBuffer(std::vector<uint32_t> Indices) override;
 
     /** Start Draw, if needed the Command Buffer can be dynamically recreated */
     void BeginRecordDraw() override;
@@ -52,7 +52,7 @@ public:
     void EndRecordDraw() override;
 
     /** Tell Vulkan to create the draw buffers */
-    void ReadyToDraw() override;
+    void DrawBuffers() override;
 
     /** Draw frame to window */
     void DrawFrame() override;

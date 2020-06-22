@@ -20,8 +20,8 @@ public:
     void CreateWin(std::string windowName, bool fullscreen) override;
     Shader* CreateShader(std::vector<char> code) override;
     Pipeline* CreatePipeline(Shader* vertexShader, Shader* fragmentShader) override;
-    VertexBuffer* CreateVertexBuffer() override;
-    IndexBuffer* CreateIndexBuffer() override;
+    VertexBuffer* CreateVertexBuffer(std::vector<Vertex> Vertices) override;
+    IndexBuffer* CreateIndexBuffer(std::vector<uint32_t> Indices) override;
 
 };
 

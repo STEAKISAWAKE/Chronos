@@ -63,6 +63,7 @@ private:
     Vulkan_Shader* vertexShader;
     Vulkan_Shader* fragmentShader;
 
+    VkDescriptorSetLayout descriptorSetLayout;
     VkPipelineLayout pipelineLayout;
     VkPipeline graphicsPipeline;
 
